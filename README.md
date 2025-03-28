@@ -1,20 +1,35 @@
 # git-author
 
-🔍 **git-author** – Identify Who Owns Your Codebase  
+🔍 **git-author** – Identify Who Owns Your Codebase
 
-`git-author` is a command-line tool designed to answer the age-old question:  
+`git-author` is a command-line tool designed to answer the age-old question:
 
-> _Who wrote this code?!_  
+> _Who wrote this code?!_
 
-Unlike `git blame`, which pinpoints who wrote a specific **line** of code, `git-author` provides a **big-picture view** of authorship. It analyzes your Git repository to determine **who contributed to entire components, directories, or subsystems**, helping teams understand **code ownership at a structural level**.  
+Unlike `git blame`, which pinpoints who wrote a specific **line** of code, `git-author` provides a **big-picture view** of authorship. It analyzes your Git repository to determine **who contributed to entire components, directories, or subsystems**, helping teams understand **code ownership at a structural level**.
 
 Think of `git-author` as `git blame` for **file trees** rather than individual lines—perfect for tracking ownership, reviewing contributions, and improving collaboration in large codebases. 🚀
 
-## Installation
+## Features
+
+- 📊 **Authorship Insights** – Get a summary of contributions per author across the entire repository.
+- 🏗 **Flexible Analysis** – Supports different views of authorship with multiple subcommands (`table`, `top`, etc.).
+- 🚀 **Fast & Efficient** – Optimized for performance, even in large repositories.
+- 🛠 **Seamless Git Integration** – Works alongside existing Git workflows and aliases.
+- 💡 **Cross-Platform** – Runs on macOS, Linux, and Windows.
+- 📦 **Easy Installation** – Available via package managers (`brew`, AUR) or precompiled binaries.
+- 🛠 **Build from Source** – Simple setup for developers who want to customize or contribute.
+
+Let me know if you'd like any refinements! 🚀
+
+## 🚀 Installation
+
 ### Precompiled Binaries
+
 See [releases](https://github.com/trinhminhtriet/git-author/releases).
 
 ### From Source
+
 Building from source requires that you have Go, Ruby, and the `rake` Ruby gem
 installed. Note that these are _only_ required when building from source; you
 can download and run one of the binary releases without installing any of these
@@ -28,6 +43,7 @@ $ ./git-author --version
 ```
 
 ## Usage
+
 _(In the following examples, `git-author` is invoked as `git author`. This will work
 automatically as long as Git can find `git-author` in your PATH. See the [Git
 Alias](#git-alias) section for more details.)_
@@ -36,6 +52,7 @@ Alias](#git-alias) section for more details.)_
 authorship in your Git repository.
 
 ### The `table` Subcommand
+
 The `table` subcommand is the default subcommand. You can invoke it explicitly
 as `git author table` or implicitly just as `git author`.
 
@@ -63,6 +80,7 @@ author who has made commits in the repository:
 
 You can specify a path to filter the results to only commits that
 touched files under the given path:
+
 ```
 ~/repos/cpython$ git author Tools/
 ┌─────────────────────────────────────────────────────┐
@@ -84,6 +102,7 @@ touched files under the given path:
 
 You can also specify a branch name, tag name, or any "commit-ish" to
 filter the results to commits reachable from the specified commit:
+
 ```
 ~/clones/cpython$ git author v3.7.1
 ┌─────────────────────────────────────────────────────┐
@@ -105,6 +124,7 @@ filter the results to commits reachable from the specified commit:
 
 Revision ranges also work. This shows the commits made after the release
 of 3.10.9 up to the release of 3.11.9:
+
 ```
 ~/clones/cpython$ git author v3.10.9..v3.11.9
 ┌─────────────────────────────────────────────────────┐
@@ -128,11 +148,13 @@ Just like with `git` itself, when there is ambiguity between a path name
 and a commit-ish, you can use `--` to clarify the distinction. The
 following command will show you contributions to the file or directory
 called `foo` even if there is also a branch called `foo` in your repository:
+
 ```
 $ git author -- foo
 ```
 
 #### Options
+
 The `-m`, `-c`, `-l`, and `-f` flags allow you to sort the table by different
 metrics.
 
@@ -171,13 +193,15 @@ prints all rows.
 Run `git-author table --help` to see additional options for the `table` subcommand.
 
 ### The `tree` Subcommand
+
 The `tree` subcommand prints out a file tree showing files in the working tree
-just like [tree](https://en.wikipedia.org/wiki/Tree_(command)). Each node in the
+just like [tree](<https://en.wikipedia.org/wiki/Tree_(command)>). Each node in the
 file tree is annotated with information showing which author contributed the most
 to files at or under that path.
 
 Here is an example showing contributions to the Python parser. By default,
 contributions will be measured by number of commits:
+
 ```
 ~/repos/cpython$ git author tree Parser/
 Parser/.........................Guido van Rossum (182)
@@ -269,6 +293,7 @@ Parser/.........................Guido van Rossum (182)
 ├── grammar.c...................Guido van Rossum (20)
 ...
 ```
+
 (_The above output continues but has been elided for the purposes
 of this README._)
 
@@ -282,6 +307,7 @@ that most of his commits were to files that have since been moved or deleted.
 Like with the `table` subcommand, you can specify a "commit-ish". This
 next example shows changes to the `Parser/` directory that happened
 after the 3.10.9 release up to the 3.11.9 release.
+
 ```
 ~/clones/cpython$ git author tree v3.10.9..v3.11.9 -- Parser/
 Parser/.................Pablo Galindo Salgado (52)
@@ -302,6 +328,7 @@ the working tree. This can make `git author tree` useful for visualizing the
 changes introduced by a branch.
 
 #### Options
+
 The `tree` subcommand, like the `table` subcommand, supports the `-l`, `-f`,
 `-m`, and `-c` flags.
 
@@ -353,6 +380,7 @@ The `-a` flag has already been mentioned.
 Run `git author tree --help` to see all options available for the `tree` subcommand.
 
 ### The `hist` Subcommand
+
 The `hist` subcommand prints out a little bar chart / timeline of commit
 activity showing the history of contributions to the repository.
 
@@ -422,11 +450,13 @@ Nov 2024 ┤ #                                     Russell Keith-Magee (1)
 Dec 2024 ┤ ###-                                  Russell Keith-Magee (3)
 Jan 2025 ┤
 ```
+
 The printed timeline will begin with the date of the first commit modifying
 that path.
 
 You can also filter using a commit-ish. This shows the timeline of contributions
 since Python's 3.12 release.
+
 ```
 ~/clones/cpython$ git author hist v3.12.0..
 May 2023 ┤ ###---------                          Victor Stinner (28)
@@ -453,6 +483,7 @@ Jan 2025 ┤ ##---------                           Bénédikt Tran (26)
 ```
 
 #### Options
+
 The `hist` subcommand supports the `-l` and `-f` flags but not the `-m` or `-c`
 flags:
 
@@ -476,6 +507,7 @@ Run `git author hist --help` for a full listing of the options supported by the
 `hist` subcommand.
 
 ### Additional Options for Filtering Commits
+
 All of the `git author` subcommands take these additional options that further
 filter the commits that get counted.
 
@@ -490,6 +522,7 @@ inputs. See git-commit(1) for a description of what is possible.
 
 The following example shows the paths edited by Guido van Rossum over the last
 eight months:
+
 ```
 ~/repos/cpython$ git author tree -d 1 --since "nine months ago" --author "Guido van Rossum"
 ./..................Guido van Rossum (11)
@@ -508,16 +541,19 @@ eight months:
 ```
 
 ## Caching
+
 `git author` caches data on a per-repository basis under `XDG_CACHE_HOME` (this is
 `~/.cache` if the environment variable is not set).
 
 You can disable caching by setting `GIT_WHO_DISABLE_CACHE=1`.
 
 ## Using `git-author` with Docker
+
 You can run `git-author` as a Docker container without installing it on your
 system directly. Follow these steps to build and use the Docker image.
 
 ### Building the Docker Image
+
 To build the `git-author` Docker image, run the following command from the project root:
 
 ```
@@ -527,6 +563,7 @@ docker build -t git-author -f docker/Dockerfile .
 This will create a Docker image named `git-author` that you can use to run the tool.
 
 ### Running `git-author` via Docker
+
 To use git-author without modifying your Git configuration, you can manually run:
 
 ```
@@ -539,6 +576,7 @@ docker run --rm -it -v "$(pwd)":/git -v "$HOME":/root git-author author
 - `-v "$HOME:/root"`: Ensures that user-specific configurations (e.g., SSH keys, Git settings) are available inside the container.
 
 ### Setting Up a Git Alias
+
 To make it easier to run `git-author`, you can add an alias to your Git
 configuration. Add the following lines to your `~/.gitconfig` file:
 
@@ -556,6 +594,7 @@ git author
 from any Git repository, and it will invoke git-author through Docker.
 
 ## Git Alias
+
 If you install the `git-author` binary somewhere in your path, running `git author`
 will automatically invoke it with no further configuration. This is a Git
 feature.
@@ -572,6 +611,7 @@ See [here](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases) for more
 information about Git aliases.
 
 ## Git Mailmap
+
 Quite often, people end up committing to a repository under different names or
 using different email addresses. For example, someone might make a commit using
 the name "Nathan Smith" and their work email address and then later make a
@@ -586,7 +626,9 @@ mailmap](https://git-scm.com/docs/gitmailmap). If a `.mailmap` file is present
 in a Git repository, `git author` will respect it.
 
 ## What Exactly Do These Numbers Mean?
+
 ### Metrics
+
 The number of **commits** shown for each author is the number of unique commits
 found while walking the commit log. When supplying a path argument to `git
 author`, the commits walked include only commits modifying the given path(s).
@@ -603,6 +645,7 @@ all files in the case of no path arguments. In Git, modifying a line counts as
 removing it and then adding the new version of the line.
 
 ### Merge Commits
+
 Merge commits are not counted toward any of these metrics. The rationale here
 is that merge commits represent a kind of overhead involved in managing the
 commit graph and that all novel changes will already have been introduced to
@@ -614,6 +657,7 @@ for each author. Merge commits are still ignored for the purposes of the file
 total or lines total.
 
 ### Differences From `git blame`
+
 Whereas `git blame` starts from the code that exists in the working tree and
 identifies the commit that introduced each line, `git author` instead walks some
 subset of the commit log tallying contributions. This means that `git blame`
@@ -644,7 +688,9 @@ up with the code in this file?", perhaps because the question is too ambiguous.
 tree?"
 
 ## DEVELOPMENT
+
 ### Test Repository Submodule
+
 Some of the automated tests for `git-author` need to run against a Git repository.
 A test repository is attached to this repository as a submodule.
 
